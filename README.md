@@ -1,7 +1,5 @@
 # Wizgo
 
-A golang library to control your WiZ lights
-
 <img src="https://raw.githubusercontent.com/achetronic/wizgo/master/docs/img/logo.png" alt="Wizgo Logo (Main) logo." width="150">
 
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/achetronic/wizgo)
@@ -10,7 +8,7 @@ A golang library to control your WiZ lights
 ![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCeSb3yfsPNNVr13YsYNvCAw?label=achetronic&link=http%3A%2F%2Fyoutube.com%2Fachetronic)
 ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/achetronic?style=flat&logo=twitter&link=https%3A%2F%2Ftwitter.com%2Fachetronic)
 
-A CLI to automatically turn on/off your heater/cooler based on prices and weather to save money
+A golang library to control your WiZ lights
 
 > At this moment, the library is not covering the whole API as it is discovered by reverse engineering 
 > If you want to cover more things, consider [contributing](#how-to-contribute)
@@ -121,7 +119,7 @@ func main() {
 
 ```
 
-## How to collaborate
+## How to contribute
 
 Of course, we are open to external collaborations for this project. For doing it you must:
 
