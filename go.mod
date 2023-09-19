@@ -1,4 +1,4 @@
-module wizgo
+module github.com/achetronic/wizgo
 
 go 1.20
 
