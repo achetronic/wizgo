@@ -2,7 +2,20 @@
 
 A golang library to control your WiZ lights
 
-# Motivation
+<img src="https://raw.githubusercontent.com/achetronic/wizgo/master/docs/img/logo.png" alt="Wizgo Logo (Main) logo." width="150">
+
+![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/achetronic/wizgo)
+![GitHub](https://img.shields.io/github/license/achetronic/wizgo)
+
+![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCeSb3yfsPNNVr13YsYNvCAw?label=achetronic&link=http%3A%2F%2Fyoutube.com%2Fachetronic)
+![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/achetronic?style=flat&logo=twitter&link=https%3A%2F%2Ftwitter.com%2Fachetronic)
+
+A CLI to automatically turn on/off your heater/cooler based on prices and weather to save money
+
+> At this moment, the library is not covering the whole API as it is discovered by reverse engineering 
+> If you want to cover more things, consider [contributing](#how-to-contribute)
+
+## Motivation
 
 Domotic devices are cool, but they will be cooler when [Matter](https://csa-iot.org/all-solutions/matter/) 
 protocol lands, finally, into the industry.
@@ -18,7 +31,7 @@ once when Matter has landed? Are you thinking about throwing them to the trash?
 With this library you can make your own automations with them. 
 And now it's as easy as you should forgive about throwing... what?
 
-# Methods
+## Methods
 
 Just read these wonderful lines:
 
