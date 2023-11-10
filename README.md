@@ -4,6 +4,7 @@
 
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/achetronic/wizgo)
 ![GitHub](https://img.shields.io/github/license/achetronic/wizgo)
+[![Go Reference](https://pkg.go.dev/badge/github.com/achetronic/wizgo.svg)](https://pkg.go.dev/github.com/achetronic/wizgo)
 
 ![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCeSb3yfsPNNVr13YsYNvCAw?label=achetronic&link=http%3A%2F%2Fyoutube.com%2Fachetronic)
 ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/achetronic?style=flat&logo=twitter&link=https%3A%2F%2Ftwitter.com%2Fachetronic)
