@@ -7,11 +7,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/exp/maps"
 	"net"
 	"slices"
 	"strconv"
 	"strings"
+	"time"
+
+	"golang.org/x/exp/maps"
 
 	wizgotypes "github.com/achetronic/wizgo/api/types"
 )
@@ -81,6 +83,7 @@ const (
 
 type WizClient struct {
 	deviceConnection *net.UDPConn
+	timeout          time.Duration
 }
 
 // Thanks to project PyWizLights for some of the reverse engineering they already did previously than me
@@ -106,8 +109,27 @@ func CreateWizClient(host string, port int) (wizClient WizClient, err error) {
 	return wizClient, err
 }
 
+// Close will close the connection to the device and should be used when the client is no longer needed to free up resources.
+func (w *WizClient) Close() error {
+	return w.deviceConnection.Close()
+}
+
+// setTimeout sets a timeout to complete all request/response interactions
+// for any communications with the device
+func (w *WizClient) SetTimeout(timeout time.Duration) {
+	w.timeout = timeout
+}
+
 // In general, send datagrams to the device
 func (w *WizClient) sendDatagrams(content []byte) (response []byte, err error) {
+
+	// Set an end to end timeout
+	if w.timeout != 0 {
+		w.deviceConnection.SetDeadline(time.Now().Add(w.timeout))
+	} else {
+		// No timeout
+		w.deviceConnection.SetDeadline(time.Time{})
+	}
 
 	// Send datagrams to the device
 	_, err = w.deviceConnection.Write(content)
