@@ -116,10 +116,46 @@ func main() {
 	_, err = wizClient.IsRgb()
 	_, err = wizClient.IsSceneAvailable(32)
 	_, err = wizClient.Registration("192.168.2.173", "704F7C84524A", true)
+	_, err = wizClient.Reset()
+	_, err = wizClient.Reboot()
 }
 
 
 ```
+
+## Connection lifecycle
+
+A client keeps a single UDP connection open. Use `SetTimeout` to avoid blocking
+forever on a device that does not answer, and `Close` to release the socket when
+you are done:
+
+```go
+wizClient, err := wizgo.CreateWizClient("192.168.2.107", 38899)
+if err != nil {
+    log.Fatal(err)
+}
+
+defer wizClient.Close()
+
+wizClient.SetTimeout(2 * time.Second)
+```
+
+## Device types
+
+WiZ bulbs are grouped by the LEDs they contain:
+
+- **RGB**: RGB + cold and warm white LEDs. Supports every scene and color mode.
+- **TW**: cold and warm white LEDs. Supports CCT and most static scenes.
+- **DW**: dimmable white only. Supports dimming and a small set of scenes.
+
+Use `IsRgb`, `IsTw` and `IsDw` to detect the type, and `IsSceneAvailable` to
+check whether a scene can be applied before calling `SetScene`.
+
+## Known limitations
+
+- `SetRhythm` is not implemented yet.
+- The library does not cover the whole WiZ protocol (broadcast discovery,
+  scheduling, user configuration setters, etc.). Contributions are welcome.
 
 ## How to contribute
 
