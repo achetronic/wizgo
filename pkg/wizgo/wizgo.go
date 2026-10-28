@@ -1,6 +1,14 @@
 // SPDX-FileCopyrightText: 2026 Alby Hernández <hola@achetronic.com>
 // SPDX-License-Identifier: Apache-2.0
 
+// Package wizgo provides a Go client to control WiZ smart lighting devices
+// over UDP. Create a client with CreateWizClient and use it to turn devices
+// on and off, change colors, color temperature, brightness, scenes and read
+// their configuration.
+//
+// WiZ devices expose a small JSON-over-UDP protocol on port 38899 by default.
+// This library is not (yet) a complete implementation of that protocol; see
+// the README for the list of supported operations and known gaps.
 package wizgo
 
 import (
@@ -19,7 +27,9 @@ import (
 )
 
 var (
-	// TODO
+	// WizScenes maps the scene IDs supported by WiZ devices to their names.
+	// RGB devices support the full set; TW and DW devices support subsets (see
+	// WizTwScenes and WizDwScenes).
 	WizScenes = map[int]string{
 		1:    "Ocean",
 		2:    "Romance",
@@ -81,6 +91,7 @@ const (
 	SceneNotAvailableErrorMessage        = "scene not available: %s"
 )
 
+// WizClient is a handle to a single WiZ device reachable over UDP.
 type WizClient struct {
 	deviceConnection *net.UDPConn
 	timeout          time.Duration
@@ -89,7 +100,9 @@ type WizClient struct {
 // Thanks to project PyWizLights for some of the reverse engineering they already did previously than me
 // Ref: https://github.com/sbidy/pywizlight
 
-// TODO
+// CreateWizClient opens a UDP connection to the WiZ device at host:port and
+// returns a client ready to send commands. The connection is kept open for the
+// lifetime of the client; call Close when it is no longer needed.
 func CreateWizClient(host string, port int) (wizClient WizClient, err error) {
 
 	// Resolve the address for the given backend
@@ -103,19 +116,20 @@ func CreateWizClient(host string, port int) (wizClient WizClient, err error) {
 	if err != nil {
 		return wizClient, err
 	}
-	//defer deviceConn.Close()
+	// The connection is intentionally kept open; callers release it with Close.
 
 	wizClient.deviceConnection = deviceConn
 	return wizClient, err
 }
 
-// Close will close the connection to the device and should be used when the client is no longer needed to free up resources.
+// Close releases the underlying UDP connection. It should be called when the
+// client is no longer needed to free up resources.
 func (w *WizClient) Close() error {
 	return w.deviceConnection.Close()
 }
 
-// setTimeout sets a timeout to complete all request/response interactions
-// for any communications with the device
+// SetTimeout sets a deadline applied to every request/response interaction
+// with the device. A zero value disables the timeout.
 func (w *WizClient) SetTimeout(timeout time.Duration) {
 	w.timeout = timeout
 }
@@ -157,13 +171,11 @@ func (w *WizClient) sendDatagrams(content []byte) (response []byte, err error) {
 // sendMessage sends a WiZ message over UDP and returns the response already parsed
 func (w *WizClient) sendMessage(message wizgotypes.WizMessage) (response wizgotypes.WizMessageResponse, err error) {
 
-	// TODO
 	jsonMessage, err := json.Marshal(message)
 	if err != nil {
 		return response, err
 	}
 
-	// TODO
 	responseBytes, err := w.sendDatagrams(jsonMessage)
 	if err != nil {
 		return response, err
@@ -317,7 +329,8 @@ func (w *WizClient) IsDw() (bool, error) {
 	return true, nil
 }
 
-// IsSceneAvailable todo
+// IsSceneAvailable reports whether sceneId can be applied to this device,
+// taking into account whether it is an RGB, TW or DW bulb.
 func (w *WizClient) IsSceneAvailable(sceneId int) (available bool, err error) {
 
 	isRgbDevice, err := w.IsRgb()
@@ -496,7 +509,7 @@ func (w *WizClient) SetSpeed(speed int) (response wizgotypes.WizMessageResponse,
 	return response, err
 }
 
-// TODO
+// SetRatio sets the ratio between the up and down light of the device (1-100).
 func (w *WizClient) SetRatio(ratio int) (response wizgotypes.WizMessageResponse, err error) {
 
 	if ratio < 1 || ratio > 100 {
@@ -519,8 +532,11 @@ func (w *WizClient) SetRatio(ratio int) (response wizgotypes.WizMessageResponse,
 func (w *WizClient) SetScene(sceneId int) (response wizgotypes.WizMessageResponse, err error) {
 
 	isSceneAvailable, err := w.IsSceneAvailable(sceneId)
-	if err != nil || !isSceneAvailable {
-		return response, errors.New(fmt.Sprintf(SceneNotAvailableErrorMessage, err))
+	if err != nil {
+		return response, fmt.Errorf(SceneNotAvailableErrorMessage, err)
+	}
+	if !isSceneAvailable {
+		return response, errors.New("scene not available for this device")
 	}
 
 	wizMessage := wizgotypes.WizMessage{
@@ -535,9 +551,9 @@ func (w *WizClient) SetScene(sceneId int) (response wizgotypes.WizMessageRespons
 	return response, err
 }
 
-// SetRhythm set a rhythm by its ID.
-// TODO: Implementation pending as it requires deeper reverse engineering to figure out what is needed
-// There are three potential methods involved: setSchdPset, setSchd, setPilot
+// SetRhythm is not yet implemented: it requires deeper reverse engineering of
+// the setSchdPset/setSchd/setPilot protocol. It currently returns the zero
+// value without contacting the device.
 func (w *WizClient) SetRhythm(rhythmId int) (response wizgotypes.WizMessageResponse, err error) {
-	return response, err
+	return response, errors.New("SetRhythm is not implemented yet")
 }

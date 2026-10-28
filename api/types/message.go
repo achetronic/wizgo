@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Alby Hernández <hola@achetronic.com>
 // SPDX-License-Identifier: Apache-2.0
 
+// Package types holds the message structures used to talk to WiZ devices.
 package types
 
 // WizMessageParams represents the params field inside the message.
