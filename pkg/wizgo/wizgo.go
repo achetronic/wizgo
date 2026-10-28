@@ -551,30 +551,6 @@ func (w *WizClient) SetScene(sceneId int) (response wizgotypes.WizMessageRespons
 	return response, err
 }
 
-// Reset restores the device to its factory defaults.
-func (w *WizClient) Reset() (response wizgotypes.WizMessageResponse, err error) {
-
-	wizMessage := wizgotypes.WizMessage{
-		Id:     1,
-		Method: "reset",
-	}
-
-	response, err = w.sendMessage(wizMessage)
-	return response, err
-}
-
-// Reboot restarts the device.
-func (w *WizClient) Reboot() (response wizgotypes.WizMessageResponse, err error) {
-
-	wizMessage := wizgotypes.WizMessage{
-		Id:     1,
-		Method: "reboot",
-	}
-
-	response, err = w.sendMessage(wizMessage)
-	return response, err
-}
-
 // SetRhythm is not yet implemented: it requires deeper reverse engineering of
 // the setSchdPset/setSchd/setPilot protocol. It currently returns the zero
 // value without contacting the device.
